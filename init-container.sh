@@ -10,7 +10,9 @@ readonly lxc_scripts_root
 sudo lxc-create --name "$lxc_app" --template download -- --dist "$lxc_dist" --release "$lxc_release" --arch armv7l
 
 # set MAC for static IP purposes
-sudo sed -Ei "s~(lxc\.net\.0\.hwaddr = ).+\$~\\1${lxc_mac}~" "/srv/lxc/${lxc_app}/config"
+if [[ ${lxc_mac:-} ]]; then
+  sudo sed -Ei "s~(lxc\.net\.0\.hwaddr = ).+\$~\\1${lxc_mac}~" "/srv/lxc/${lxc_app}/config"
+fi
 
 # copy init stuff to container FS
 sudo rsync -r "${lxc_scripts_root}/${lxc_app}/" "/srv/lxc/${lxc_app}/rootfs/"
