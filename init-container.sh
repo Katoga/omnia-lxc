@@ -15,7 +15,9 @@ if [[ ${lxc_mac:-} ]]; then
 fi
 
 # copy init stuff to container FS
-sudo rsync -r "${lxc_scripts_root}/${lxc_app}/" "/srv/lxc/${lxc_app}/rootfs/"
+if [[ -d "${lxc_scripts_root}/${lxc_app}/" ]]; then
+  sudo rsync -r "${lxc_scripts_root}/${lxc_app}/" "/srv/lxc/${lxc_app}/rootfs/"
+fi
 
 echo "${lxc_app}" | sudo tee "/srv/lxc/${lxc_app}/rootfs/etc/hostname"
 
