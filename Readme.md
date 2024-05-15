@@ -21,7 +21,8 @@ Scripts to simplify creating LXC containers on [Turris Omnia] router.
         ```
 1. OPTIONAL: \
 in `./${lxc_app}/`, create any files that should be copied inside the container after its creation \
-If there is `./${lxc_app}/usr/sbin/init.sh` executable file it will be run inside the container after it is created.
+If there is `./${lxc_app}/usr/sbin/init.sh` executable file it will be run inside the container after it is created. \
+If there is `./${lxc_app}/usr/sbin/post-init.sh` executable file it will be run inside the container after init is finished and container rebooted.
 1. run the script
     ```sh
     $ ./init-container.sh

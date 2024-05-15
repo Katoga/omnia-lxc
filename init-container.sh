@@ -31,3 +31,15 @@ sleep 5
 if [[ -x "${lxc_scripts_root}/${lxc_app}/usr/sbin/init.sh" ]]; then
   sudo lxc-attach --name "$lxc_app" -- /usr/sbin/init.sh
 fi
+
+# reboot the container
+sleep 5
+sudo lxc-stop --name "$lxc_app"
+sleep 5
+sudo lxc-start --name "$lxc_app"
+sleep 5
+
+# run post-init script
+if [[ -x "${lxc_scripts_root}/${lxc_app}/usr/sbin/post-init.sh" ]]; then
+  sudo lxc-attach --name "$lxc_app" -- /usr/sbin/post-init.sh
+fi
