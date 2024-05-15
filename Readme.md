@@ -9,7 +9,7 @@ Scripts to simplify creating LXC containers on [Turris Omnia] router.
         ```
     - release version of aforementioned Linux distribution
         ```sh
-        $ export lxc_release=Edge
+        $ export lxc_release=3.19
         ```
     - name of container (is set as hostname in it too)
         ```sh
