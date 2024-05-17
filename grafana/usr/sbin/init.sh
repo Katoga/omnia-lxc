@@ -1,92 +1,48 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-# enable IPv4 networking
-# https://wiki.turris.cz/en/public/lxc_alpine
-mount -t proc proc proc/
-ifconfig eth0 192.168.1.145 netmask 255.255.255.0 up
-route add default gw 192.168.1.1
-echo "nameserver 192.168.1.1" > /etc/resolv.conf
+apt-get update
+apt-get upgrade --assume-yes
 
-apk update
-apk upgrade
-
-apk add \
-  alpine-sdk \
+apt-get install --assume-yes --no-install-recommends \
+  apt-transport-https \
   curl \
-  doas \
-  openrc
+  gnupg \
+  software-properties-common
 
-rc-update add networking
-rc-update add bootmisc boot
+mkdir -p /etc/apt/keyrings/
 
-# prepare build environment
-adduser -D katoga
-adduser katoga abuild
-adduser katoga wheel
-echo 'permit nopass :wheel' > /etc/doas.d/doas.conf
+curl -LfSs https://apt.grafana.com/gpg.key \
+| gpg --dearmor \
+> /etc/apt/keyrings/grafana.gpg
 
-echo 'PACKAGER="Katoga <katoga.cz@hotmail.com>"' >> /etc/abuild.conf
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" >> /etc/apt/sources.list.d/grafana.list
 
-mkdir -p /var/cache/distfiles
-chgrp abuild /var/cache/distfiles
-chmod g+w /var/cache/distfiles
+apt-get update
+apt-get install --assume-yes --no-install-recommends \
+  grafana
 
-su katoga -c 'abuild-keygen -ain'
+# enable https with self-signed cert
+cert_path=/etc/grafana/grafana.crt
+cert_key_path=/etc/grafana/grafana.key
 
-pkg_version=10.4.3
+openssl genrsa -out "$cert_key_path" 2048
+openssl req -new -key "$cert_key_path" -out /etc/grafana/grafana.csr -subj '/C=CZ/L=Praha/CN=grafana.lan'
+openssl x509 -req -days 365 -in /etc/grafana/grafana.csr -signkey "$cert_key_path" -out "$cert_path"
+chown grafana:grafana "$cert_path"
+chown grafana:grafana "$cert_key_path"
+chmod 400 "$cert_key_path" "$cert_path"
 
-# build grafana-frontend
-pkg_name=grafana-frontend
-release_version=3.19
-su katoga -c "mkdir -p /home/katoga/aports/${pkg_name}"
-cd "/home/katoga/aports/${pkg_name}"
-for f in APKBUILD; do
-  echo "f: '${f}'"
-  curl -LfSs \
-    -o "$f" \
-    "https://git.alpinelinux.org/aports/plain/community/${pkg_name}/${f}?h=${release_version}-stable"
-done
+sed -Ei 's~;protocol = http~protocol = https~' /etc/grafana/grafana.ini
+sed -Ei 's~;domain = localhost~domain = grafana.lan~' /etc/grafana/grafana.ini
+sed -Ei "s~;cert_file =~cert_file =${cert_path}~" /etc/grafana/grafana.ini
+sed -Ei "s~;cert_key =~cert_key =${cert_key_path}~" /etc/grafana/grafana.ini
 
-# update version
-checksum="$(curl -LfSs "https://dl.grafana.com/oss/release/grafana-${pkg_version}.linux-amd64.tar.gz" | sha512sum | cut -d ' ' -f 1)"
-sed -Ei "s~^(pkgver=).+$~\1${pkg_version}~" APKBUILD
-sed -Ei "s~^(pkgrel=).+$~\10~" APKBUILD
-sed -Ei "s~^[0-9a-f]+(\s+grafana-frontend-)\d+\.\d+\.\d+(-bin.tar.gz)$~${checksum}\1${pkg_version}\2~" APKBUILD
+# disable call-home
+sed -Ei 's~;reporting_enabled = true~reporting_enabled = false~' /etc/grafana/grafana.ini
 
-chown katoga:katoga ./*
-
-su katoga -c 'abuild -r'
-
-# build grafana
-pkg_name=grafana
-release_version=3.19
-su katoga -c "mkdir -p /home/katoga/aports/${pkg_name}"
-cd "/home/katoga/aports/${pkg_name}"
-for f in APKBUILD "${pkg_name}-cli.sh" "${pkg_name}-server.sh" "${pkg_name}.confd" "${pkg_name}.initd" "${pkg_name}.pre-install"; do
-  echo "f: '${f}'"
-  curl -LfSs \
-    -o "$f" \
-    "https://git.alpinelinux.org/aports/plain/community/${pkg_name}/${f}?h=${release_version}-stable"
-done
-
-# update version
-checksum="$(curl -LfSs "https://github.com/grafana/grafana/archive/v${pkg_version}.tar.gz" | sha512sum | cut -d ' ' -f 1)"
-sed -Ei "s~^(pkgver=).+$~\1${pkg_version}~" APKBUILD
-sed -Ei "s~^(pkgrel=).+$~\10~" APKBUILD
-sed -Ei "s~^[0-9a-f]+(\s+grafana-)\d+\.\d+\.\d+(.tar.gz)$~${checksum}\1${pkg_version}\2~" APKBUILD
-sed -Ei 's~\s+!armhf~~' APKBUILD
-
-chown katoga:katoga ./*
-
-su katoga -c 'abuild -r'
-
-# install packages
-apk add \
-  --repository /home/katoga/packages/aports \
-  grafana \
-  grafana-openrc \
-  grafana-frontend
-
-rc-update add grafana
+# activate
+systemctl daemon-reload
+systemctl enable grafana-server
+systemctl start grafana-server
