@@ -10,7 +10,9 @@ route add default gw 192.168.1.1
 echo "nameserver 192.168.1.1" > /etc/resolv.conf
 
 apk update
-apk upgrade
+
+apk add --upgrade apk-tools
+apk upgrade --available
 
 apk add \
   alpine-sdk \
