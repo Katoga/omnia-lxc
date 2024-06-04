@@ -1,64 +1,34 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-# enable IPv4 networking
-# https://wiki.turris.cz/en/public/lxc_alpine
-mount -t proc proc proc/
-ifconfig eth0 192.168.1.150 netmask 255.255.255.0 up
-route add default gw 192.168.1.1
-echo "nameserver 192.168.1.1" > /etc/resolv.conf
+apt-get update
+apt-get upgrade --assume-yes
 
-apk update
-
-apk add --upgrade apk-tools
-apk upgrade --available
-
-apk add \
-  alpine-sdk \
+apt-get install --assume-yes --no-install-recommends \
+  apt-transport-https \
   curl \
-  doas \
-  openrc
+  gnupg \
+  prometheus-node-exporter \
+  software-properties-common
 
-rc-update add networking
-rc-update add bootmisc boot
+mkdir -p /etc/apt/keyrings/
 
-# prepare build environment
-adduser -D katoga
-adduser katoga abuild
-adduser katoga wheel
-echo 'permit nopass :wheel' > /etc/doas.d/doas.conf
+readonly key_checksum=393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c
+curl -LfSsO https://repos.influxdata.com/influxdata-archive_compat.key
+[[ "$(sha256sum influxdata-archive_compat.key | cut -d ' ' -f 1)" == "$key_checksum" ]]
 
-echo 'PACKAGER="Katoga <katoga.cz@hotmail.com>"' >> /etc/abuild.conf
+cat influxdata-archive_compat.key \
+| gpg --dearmor \
+> /etc/apt/keyrings/influxdata-archive_compat.gpg
 
-mkdir -p /var/cache/distfiles
-chgrp abuild /var/cache/distfiles
-chmod g+w /var/cache/distfiles
+echo 'deb [signed-by=/etc/apt/keyrings/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' \
+>> /etc/apt/sources.list.d/influxdata.list
 
-su katoga -c 'abuild-keygen -ain'
+apt-get update
+apt-get install --assume-yes --no-install-recommends \
+  influxdb
 
-# build influxdb
-pkg_name=influxdb
-release_version=3.17
-su katoga -c "mkdir -p /home/katoga/aports/${pkg_name}"
-cd "/home/katoga/aports/${pkg_name}"
-for f in APKBUILD "${pkg_name}.confd" "${pkg_name}.initd" "${pkg_name}.pre-install"; do
-  echo "f: '${f}'"
-  curl -LfSs \
-    -o "$f" \
-    "https://git.alpinelinux.org/aports/plain/community/${pkg_name}/${f}?h=${release_version}-stable"
-done
-
-# sed
-
-chown katoga:katoga ./*
-
-su katoga -c 'abuild -r'
-
-# install packages
-apk add \
-  --repository /home/katoga/packages/aports \
-  influxdb \
-  influxdb-openrc
-
-rc-update add influxdb
+systemctl daemon-reload
+systemctl start influxdb
+systemctl enable influxdb
