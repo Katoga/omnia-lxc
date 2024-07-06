@@ -1,0 +1,17 @@
+[Unit]
+Description=Prometheus exporter for librespeed network speed tester
+After=network-online.target
+
+[Service]
+User=librespeed-exporter
+Group=librespeed-exporter
+ExecStart=/opt/librespeed-exporter/server.py 51423
+#LimitNOFILE=65536
+#EnvironmentFile=-/etc/default/influxdb
+#KillMode=control-group
+#Restart=on-failure
+#Type=forking
+#PIDFile=/var/lib/influxdb/influxd.pid
+
+[Install]
+WantedBy=multi-user.target
