@@ -1,8 +1,0 @@
-#!/sbin/openrc-run
-
-name="librespeed-exporter"
-description="prometheus exporter for librespeed network speed tester"
-supervisor=supervise-daemon
-command=/opt/librespeed-exporter/server.py
-command_args="51423"
-command_user="librespeed:librespeed"
