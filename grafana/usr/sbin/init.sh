@@ -9,6 +9,7 @@ apt-get install --assume-yes --no-install-recommends \
   apt-transport-https \
   curl \
   gnupg \
+  prometheus-node-exporter \
   software-properties-common
 
 mkdir -p /etc/apt/keyrings/
