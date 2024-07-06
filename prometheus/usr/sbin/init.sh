@@ -1,25 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-# enable IPv4 networking
-# https://wiki.turris.cz/en/public/lxc_alpine
-mount -t proc proc proc/
-ifconfig eth0 192.168.1.155 netmask 255.255.255.0 up
-route add default gw 192.168.1.1
-echo "nameserver 192.168.1.1" > /etc/resolv.conf
+apt-get update
+apt-get upgrade --assume-yes
 
-apk update
-
-apk add --upgrade apk-tools
-apk upgrade --available
-
-# install packages
-apk add \
-  openrc \
-  prometheus \
-  prometheus-openrc
-
-rc-update add bootmisc boot
-rc-update add networking
-rc-update add prometheus
+apt-get install --assume-yes --no-install-recommends \
+  prometheus
