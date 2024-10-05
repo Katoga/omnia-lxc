@@ -26,8 +26,8 @@ apt-get install --assume-yes --no-install-recommends \
 
 sed -Ei 's~;(domain =) localhost~\1 grafana.lan~' /etc/grafana/grafana.ini
 
-# disable call-home
-sed -Ei 's~;reporting_enabled = true~reporting_enabled = false~' /etc/grafana/grafana.ini
+# disable call-home, see https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#analytics
+sed -Ei 's~;?(reporting_enabled|check_for_updates|check_for_plugin_updates)\s*.+~\1 = false~' /etc/grafana/grafana.ini
 
 # activate
 systemctl daemon-reload
