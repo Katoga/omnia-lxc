@@ -1,0 +1,13 @@
+# https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+apiVersion: 1
+
+datasources:
+  # https://grafana.com/docs/grafana/latest/datasources/prometheus/
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus.local:9090
+    jsonData:
+      prometheusVersion: 2.42.0
+      prometheusType: Prometheus
+      # tlsSkipVerify: true
