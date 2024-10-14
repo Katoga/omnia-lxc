@@ -11,11 +11,18 @@ apt-get upgrade --assume-yes
 useradd -UM -s /usr/sbin/nologin librespeed-exporter
 
 apt-get install --assume-yes --no-install-recommends \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   build-essential \
   curl \
   ca-certificates \
   git \
+  libnss-mdns \
   prometheus-node-exporter
+
+sed -Ei 's~mdns4_minimal~mdns6~' /etc/nsswitch.conf
+sed -Ei 's~(use-ipv4=)yes~\1no~' /etc/avahi/avahi-daemon.conf
 
 readonly go_version="$(curl -LfSs https://go.dev/VERSION?m=text | head -n1)"
 
