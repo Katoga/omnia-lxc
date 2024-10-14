@@ -11,6 +11,9 @@ apt-get upgrade --assume-yes
 useradd -UM -s /usr/sbin/nologin librespeed-exporter
 
 apt-get install --assume-yes --no-install-recommends \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   build-essential \
   curl \
   ca-certificates \
