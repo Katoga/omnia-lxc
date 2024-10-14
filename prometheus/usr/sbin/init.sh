@@ -7,3 +7,7 @@ apt-get upgrade --assume-yes
 
 apt-get install --assume-yes --no-install-recommends \
   prometheus
+
+cp -f /opt/prometheus/prometheus.yml /etc/prometheus/prometheus.yml
+
+systemctl reload prometheus
