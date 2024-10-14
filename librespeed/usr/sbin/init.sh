@@ -11,11 +11,18 @@ apt-get upgrade --assume-yes
 useradd -UM -s /usr/sbin/nologin librespeed-exporter
 
 apt-get install --assume-yes --no-install-recommends \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   build-essential \
   curl \
   ca-certificates \
   git \
+  libnss-mdns \
   prometheus-node-exporter
+
+sed -Ei 's~mdns4_minimal~mdns~' /etc/nsswitch.conf
+sed -Ei 's~^\s*#?(MulticastDNS=)yes~\1no~' /etc/systemd/resolved.conf
 
 readonly go_version="$(curl -LfSs https://go.dev/VERSION?m=text | head -n1)"
 
