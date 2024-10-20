@@ -6,6 +6,10 @@ apt-get update
 apt-get upgrade --assume-yes
 
 apt-get install --assume-yes --no-install-recommends \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
+  libnss-mdns \
   prometheus \
   prometheus-node-exporter
 
