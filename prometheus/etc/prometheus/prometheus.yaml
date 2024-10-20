@@ -11,12 +11,12 @@ alerting:
           # - alertmanager:9093
 
 remote_read:
-  - url: http://influxdb.lan:8086/api/v1/prom/read?db=prometheus
+  - url: http://influxdb.local:8086/api/v1/prom/read?db=prometheus
     remote_timeout: '1m'
     read_recent: false
     follow_redirects: true
 remote_write:
-  - url: http://influxdb.lan:8086/api/v1/prom/write?db=prometheus
+  - url: http://influxdb.local:8086/api/v1/prom/write?db=prometheus
     remote_timeout: '30s'
     send_exemplars: false
     follow_redirects: true
@@ -31,10 +31,6 @@ remote_write:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: prometheus
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
     static_configs:
       - targets:
         - localhost:9090
@@ -42,16 +38,24 @@ scrape_configs:
   - job_name: grafana
     static_configs:
       - targets:
-        - grafana.lan:3000
+        - grafana.local:3000
 
   - job_name: influxdb
     static_configs:
       - targets:
-        - influxdb.lan:8086
+        - influxdb.local:8086
 
   - job_name: librespeed
     scrape_interval: 1h
     scrape_timeout: 1m
     static_configs:
       - targets:
-        - librespeed.lan:51423
+        - librespeed.local:51423
+
+  - job_name: node
+    static_configs:
+      - targets:
+        - librespeed.local:9100
+        - prometheus.local:9100
+        - influxdb.local:9100
+        - grafana.local:9100
