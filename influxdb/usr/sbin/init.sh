@@ -14,15 +14,16 @@ apt-get install --assume-yes --no-install-recommends \
 
 mkdir -p /etc/apt/keyrings/
 
-readonly key_checksum=393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c
-curl -LfSsO https://repos.influxdata.com/influxdata-archive_compat.key
-[[ "$(sha256sum influxdata-archive_compat.key | cut -d ' ' -f 1)" == "$key_checksum" ]]
+readonly key_checksum=943666881a1b8d9b849b74caebf02d3465d6beb716510d86a39f6c8e8dac7515
+readonly key_name=influxdata-archive
+curl -LfSsO "https://repos.influxdata.com/${key_name}.key"
+[[ "$(sha256sum ${key_name}.key | cut -d ' ' -f 1)" == "$key_checksum" ]]
 
-cat influxdata-archive_compat.key \
+cat "${key_name}.key" \
 | gpg --dearmor \
-> /etc/apt/keyrings/influxdata-archive_compat.gpg
+> "/etc/apt/keyrings/${key_name}.gpg"
 
-echo 'deb [signed-by=/etc/apt/keyrings/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' \
+echo "deb [signed-by=/etc/apt/keyrings/${key_name}.gpg] https://repos.influxdata.com/debian stable main" \
 >> /etc/apt/sources.list.d/influxdata.list
 
 apt-get update
