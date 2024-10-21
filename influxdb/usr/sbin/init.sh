@@ -7,8 +7,12 @@ apt-get upgrade --assume-yes
 
 apt-get install --assume-yes --no-install-recommends \
   apt-transport-https \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   curl \
   gnupg \
+  libnss-mdns \
   prometheus-node-exporter \
   software-properties-common
 
