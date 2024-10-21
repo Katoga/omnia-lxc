@@ -7,10 +7,17 @@ apt-get upgrade --assume-yes
 
 apt-get install --assume-yes --no-install-recommends \
   apt-transport-https \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   curl \
   gnupg \
+  libnss-mdns \
   prometheus-node-exporter \
   software-properties-common
+
+sed -Ei 's~mdns4_minimal~mdns~' /etc/nsswitch.conf
+sed -Ei 's~^\s*#?(MulticastDNS=)yes~\1no~' /etc/systemd/resolved.conf
 
 mkdir -p /etc/apt/keyrings/
 
