@@ -7,10 +7,16 @@ apt-get upgrade --assume-yes
 
 apt-get install --assume-yes --no-install-recommends \
   apt-transport-https \
+  avahi-daemon \
+  avahi-dnsconfd \
+  avahi-utils \
   curl \
   gnupg \
+  libnss-mdns \
   prometheus-node-exporter \
   software-properties-common
+
+sed -Ei 's~mdns4_minimal~mdns6~' /etc/nsswitch.conf
 
 mkdir -p /etc/apt/keyrings/
 
