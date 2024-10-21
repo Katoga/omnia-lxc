@@ -17,6 +17,7 @@ apt-get install --assume-yes --no-install-recommends \
   software-properties-common
 
 sed -Ei 's~mdns4_minimal~mdns6~' /etc/nsswitch.conf
+sed -Ei 's~(use-ipv4=)yes~\1no~' /etc/avahi/avahi-daemon.conf
 
 mkdir -p /etc/apt/keyrings/
 
