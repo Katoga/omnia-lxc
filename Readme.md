@@ -5,11 +5,11 @@ Scripts to simplify creating LXC containers on [Turris Omnia] router.
 1. define env vars
     - Linux distribution
         ```sh
-        $ export lxc_dist=Alpine
+        $ export lxc_dist=Debian
         ```
     - release version of aforementioned Linux distribution
         ```sh
-        $ export lxc_release=Edge
+        $ export lxc_release=Bookworm
         ```
     - name of container (is set as hostname in it too)
         ```sh
