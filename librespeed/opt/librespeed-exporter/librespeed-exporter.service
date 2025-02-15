@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus exporter for librespeed network speed tester
+After=network-online.target
+
+[Service]
+User=librespeed-exporter
+Group=librespeed-exporter
+ExecStart=/usr/local/bin/librespeed_exporter --librespeed.command /usr/local/bin/speedtest-cli --librespeed.server 79
+
+[Install]
+WantedBy=multi-user.target

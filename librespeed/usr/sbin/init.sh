@@ -38,3 +38,10 @@ mv ~/go/bin/speedtest-cli /usr/local/bin/
 readonly librespeed_exporter_version=0.4.0
 go install "github.com/Katoga/librespeed_exporter@v${librespeed_exporter_version}"
 mv ~/go/bin/librespeed_exporter /usr/local/bin/
+
+# start librespeed_exporter service
+useradd -UM -s /usr/sbin/nologin librespeed-exporter
+mv /opt/librespeed-exporter/librespeed-exporter.service /lib/systemd/system/
+systemctl daemon-reload
+systemctl start librespeed-exporter
+systemctl enable librespeed-exporter
