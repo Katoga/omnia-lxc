@@ -1,5 +1,5 @@
 # Turris Omnia LXC init
-Scripts to simplify creating LXC containers on [Turris Omnia] router.
+Scripts to simplify creating [LXC containers] on [Turris Omnia] router.
 
 ## Usage
 1. define env vars
@@ -29,3 +29,4 @@ If there is `./${lxc_app}/usr/sbin/post-init.sh` executable file it will be run 
     ```
 
 [turris omnia]: <https://www.turris.com/en/omnia/>
+[LXC containers]: <https://linuxcontainers.org/>
