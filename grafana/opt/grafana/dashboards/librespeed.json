@@ -105,11 +105,15 @@
               },
               {
                 "color": "yellow",
-                "value": 150000000
+                "value": 100000000
               },
               {
                 "color": "green",
-                "value": 170000000
+                "value": 150000000
+              },
+              {
+                "color": "blue",
+                "value": 200000000
               }
             ]
           },
@@ -138,7 +142,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -233,8 +237,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "blue",
                 "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.002
               },
               {
                 "color": "yellow",
@@ -271,7 +279,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -319,6 +327,7 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "1h",
   "schemaVersion": 40,
   "tags": [],
