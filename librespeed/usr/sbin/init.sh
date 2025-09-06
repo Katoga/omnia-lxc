@@ -15,8 +15,8 @@ sed -Ei 's~#?(MulticastDNS=).+$~\1yes~' /etc/systemd/resolved.conf
 sed -Ei 's~(\[Network\])~\1\nMulticastDNS=true~' /etc/systemd/network/eth0.network
 
 # install go
-readonly go_version=1.24.5
-readonly go_checksum=1fb3f87ac648cc6f0fcd807a512965ac3611ff8f803192ebd945df992cfe72ca4f28066c0a8e91f6e8036137d8c4ffa3f80a21006551a4cb64d744db53f14bc8
+readonly go_version=1.25.1
+readonly go_checksum=16cc78a62f09a0d416157aa0557bc3629c47f79c3cda260dc0ece73bbea82fdcc5c560d0c43ec88c69a7bcb4ae98db144b6fc71dcbd47c97526c1d3530f020f3
 
 readonly go_tarball="go${go_version}.linux-armv6l.tar.gz"
 curl -LfSsO "https://go.dev/dl/${go_tarball}"
