@@ -11,7 +11,8 @@ apt-get install --assume-yes --no-install-recommends \
   curl
 
 # enable mDNS
-sed -Ei 's~#?(MulticastDNS=).+$~\1yes~' /etc/systemd/resolved.conf
+mkdir -p /etc/systemd/resolved.conf.d/
+echo -e '[Resolve]\nMulticastDNS=yes' >> /etc/systemd/resolved.conf.d/mdns.conf
 sed -Ei 's~(\[Network\])~\1\nMulticastDNS=true~' /etc/systemd/network/eth0.network
 
 # install go
