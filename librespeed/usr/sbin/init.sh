@@ -27,7 +27,9 @@ echo "${go_checksum}  ${go_tarball}" \
 rm -rf /usr/local/go
 tar -C /usr/local -xzf "$go_tarball"
 
+# shellcheck disable=SC2016
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.profile
+# shellcheck source=/dev/null
 . ~/.profile
 
 # install speedtest-cli
