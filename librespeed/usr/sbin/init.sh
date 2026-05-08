@@ -33,7 +33,7 @@ echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.profile
 . ~/.profile
 
 # install speedtest-cli
-readonly speedtest_cli_version=1.0.12
+readonly speedtest_cli_version=1.0.13
 go install "github.com/librespeed/speedtest-cli@v${speedtest_cli_version}"
 mv ~/go/bin/speedtest-cli /usr/local/bin/
 
