@@ -5,8 +5,8 @@
     "name": "bed9r6hkf0mbkd",
     "namespace": "default",
     "uid": "paxuXwVAv1TYsZh7roSO330KmLBzCDFLXLVZ9n3PlUcX",
-    "resourceVersion": "1740225900000002",
-    "generation": 2,
+    "resourceVersion": "1788241641146019",
+    "generation": 5,
     "creationTimestamp": "2025-02-16T20:34:24Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "1"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "provisioning:",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "dashboards",
-      "grafana.app/sourceChecksum": "ae3bc28b9bd44b30d7a174d0cd02cb0e",
-      "grafana.app/sourcePath": "librespeed.json",
-      "grafana.app/sourceTimestamp": "1740225862",
-      "grafana.app/updatedBy": "provisioning:",
-      "grafana.app/updatedTimestamp": "2025-02-22T12:05:09Z",
+      "grafana.app/sourceChecksum": "f3ca2c1665474bcbef25185cf44b0177",
+      "grafana.app/sourcePath": "/opt/grafana/dashboards/librespeed.json",
+      "grafana.app/sourceTimestamp": "1788241590000",
+      "grafana.app/updatedBy": "access-policy:service",
+      "grafana.app/updatedTimestamp": "2026-09-01T05:47:21Z",
       "grafana.app/folder": ""
     }
   },
@@ -107,7 +107,9 @@
                   }
                 }
               ],
-              "queryOptions": {},
+              "queryOptions": {
+                "maxDataPoints": 3000
+              },
               "transformations": [
                 {
                   "group": "renameByRegex",
@@ -271,7 +273,9 @@
                   }
                 }
               ],
-              "queryOptions": {},
+              "queryOptions": {
+                "maxDataPoints": 3000
+              },
               "transformations": [
                 {
                   "group": "renameByRegex",
